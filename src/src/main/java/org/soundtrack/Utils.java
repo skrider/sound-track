@@ -11,16 +11,12 @@ public class Utils {
         throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
         StringBuilder s = new StringBuilder();
         String next;
-
         do {
             next = reader.readLine();
             s.append(next);
         } while (next != null);
-
-        System.out.println(s.toString());
         return s.toString();
     }
 }
