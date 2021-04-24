@@ -1,0 +1,32 @@
+{
+    rep: 1
+    volume: 80
+    shuffle: false
+    tracks: [
+        5:00 {
+            rep: 2
+            volume: 10
+            shuffle: false
+            tracks: [
+                space song,
+                wild dog 1:10
+            ]
+        },
+        15:00 {
+            rep: 1
+            volume: 10
+            tracks: [
+                lemonade
+            ]
+        },
+        {
+            rep: 3
+            volume: 20
+            shuffle: true
+            tracks: [
+                --playlist bruh girl
+            ]
+        }
+    ]
+     
+}

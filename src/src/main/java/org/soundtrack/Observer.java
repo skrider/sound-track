@@ -1,5 +1,5 @@
 package org.soundtrack;
 
-public interface Observer {
-
+public interface Observer<T> {
+    void update(T t);
 }
