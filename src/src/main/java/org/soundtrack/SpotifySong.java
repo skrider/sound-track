@@ -1,8 +1,7 @@
 package org.soundtrack;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +12,10 @@ public class SpotifySong extends Song {
             Pattern.compile(Pattern.quote("Error: No playback session detected."));
     protected static final Pattern songNotFoundError =
             Pattern.compile(Pattern.quote("No results found for \""));
+
+    public SpotifySong(String name, Timer t) {
+        super(name, t);
+    }
 
     public SpotifySong(String name, int volumeLevel, Timer t) {
         super(name, volumeLevel, t);
@@ -50,6 +53,63 @@ public class SpotifySong extends Song {
         throws IOException
     {
         super.setVolumeLevel();
-        Runtime.getRuntime().exec("spotify volume to " + volumeLevel);
+        if (volumeLevel != -1) {
+            Runtime.getRuntime().exec("spotify volume to " + volumeLevel);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + duration + ") vol: " + volumeLevel;
+    }
+
+    public static SpotifySong fromKeywordAtRandom(String keyword, int volumeLevel, Timer t, int count)
+        throws IOException, SoundtrackException
+    {
+        Pattern regex = Pattern.compile("(?<=\\d\\h\\h).*(?=\\h\\h)");
+        List<String> matches = Utils.allMatches(regex, search(keyword));
+        if (matches.isEmpty()) {
+            throw new SoundtrackException("No songs found.");
+        }
+        Utils.padFromSelf(matches, count);
+        Collections.shuffle(matches);
+        return from(matches, volumeLevel, t);
+    }
+
+    public static SpotifySong fromArtistAtRandom(String artist, int volumeLevel, Timer t, int count)
+            throws IOException
+    {
+        Pattern regex = Pattern.compile(
+                "(?<=\\d\\h\\h)(\\w\\h|\\h\\w|\\w\\w)*(?=\\h\\h[^\\n]*"+Pattern.quote(artist)+")");
+        List<String> matches = Utils.allMatches(regex, search(artist));
+        Utils.padFromSelf(matches, count);
+        Collections.shuffle(matches);
+        return from(matches, volumeLevel, t);
+    }
+
+    public static SpotifySong from(List<String> names, int volumeLevel, Timer t) {
+        SpotifySong head = null;
+        SpotifySong prev = null;
+        for (String name : names) {
+            head = new SpotifySong(name, volumeLevel, t);
+            head.setNext(prev);
+            prev = head;
+        }
+        return head;
+    }
+
+    public static SpotifySong from(List<String> names, int volumeLevel, Timer t, int count) {
+        Utils.padFromSelf(names, count);
+        return from(names, volumeLevel, t);
+    }
+
+    public static String search(String keyword)
+            throws IOException
+    {
+        Process p = Runtime.getRuntime().exec("spotify search " + keyword);
+        String result = Utils.readFromInputStream(p.getInputStream());
+        p.destroy();
+        System.out.println(result);
+        return result;
     }
 }

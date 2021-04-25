@@ -10,10 +10,16 @@ public abstract class Song {
     protected Song next;
     protected int volumeLevel;
 
-    public Song(String name, int volumeLevel, Timer timer) {
+    public Song(String name, Timer timer) {
         this.name = name;
-        this.volumeLevel = volumeLevel;
         this.timer = timer;
+        volumeLevel = -1;
+        duration = 0;
+    }
+
+    public Song(String name, int volumeLevel, Timer timer) {
+        this(name, timer);
+        this.volumeLevel = volumeLevel;
         duration = 0;
     }
 
@@ -59,7 +65,7 @@ public abstract class Song {
     public void setVolumeLevel()
         throws IOException
     {
-        if (volumeLevel < 0) {
+        if (volumeLevel < -1) {
             volumeLevel = 0;
         } else if (volumeLevel > 100) {
             volumeLevel = 100;

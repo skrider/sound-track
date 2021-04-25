@@ -18,8 +18,10 @@ public class App
         s3.setNext(s4);
 
         try {
-            Song current = s1;
+            Song t1 = SpotifySong.fromKeywordAtRandom("beach house", -1, t, 5);
+            Song current = t1;
             current.start();
+
             while (true) {
                 if (current.checkNext()) {
                     System.out.println("next");
