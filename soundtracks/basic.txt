@@ -1,0 +1,20 @@
+{
+    rep: 1
+    volume: 100
+    shuffle: true
+    tracks: [
+        water 0:10,
+        {
+            rep: 3
+            volume: 50
+            shuffle: true
+            tracks: [
+                space song 0:15,
+                lemonade 0:10
+            ]
+        },
+        ni**as in paris 0:10,
+        lemonade 0:10,
+        sunflower 0:10
+    ]
+}

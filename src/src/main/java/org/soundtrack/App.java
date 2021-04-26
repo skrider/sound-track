@@ -1,5 +1,7 @@
 package org.soundtrack;
 
+import java.io.File;
+
 /**
  * Hello world!
  *
@@ -8,24 +10,23 @@ public class App
 {
     public static void main( String[] args ) {
         Timer t = new Timer();
-
-        Song s1 = new SpotifySong("Space Song", 80, t);
-        Song s2 = new SpotifySong("Heat Waves", 80, t);
-        s1.setNext(s2);
-        Song s3 = new SpotifySong("Ni**as in Paris", 80, t);
-        s2.setNext(s3);
-        Song s4 = new SpotifySong("Halo Theme", 80, t);
-        s3.setNext(s4);
+        File f = new File(
+                "C:\\Users\\steph\\Documents\\GitHub\\sound-track\\soundtracks\\basic.txt");
+        String snippet = Utils.readContentsAsString(f);
+        snippet = Utils.clean(snippet);
+        Parser parser = new Parser(snippet);
+        parser.parse(t);
 
         try {
-            Song t1 = SpotifySong.fromKeywordAtRandom("beach house", -1, t, 5);
-            Song current = t1;
+            Song current = parser.getHead();
             current.start();
 
             while (true) {
                 if (current.checkNext()) {
-                    System.out.println("next");
                     current = current.next();
+                    if (current == null) {
+                        System.exit(0);
+                    }
                     current.start();
                 }
             }

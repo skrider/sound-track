@@ -9,7 +9,7 @@ public class SpotifySong extends Song {
 
     protected static final Pattern durationReader = Pattern.compile("\\d\\d:\\d\\d(?=\\))");
     protected static final Pattern sessionNotStartedError =
-            Pattern.compile(Pattern.quote("Error: No playback session detected."));
+            Pattern.compile(Pattern.quote("error"));
     protected static final Pattern songNotFoundError =
             Pattern.compile(Pattern.quote("No results found for \""));
 
@@ -29,7 +29,6 @@ public class SpotifySong extends Song {
     public void start()
         throws IOException, SoundtrackException
     {
-        super.start();
         Runtime runtime = Runtime.getRuntime();
         String s = Utils.readFromInputStream(
                 runtime.exec("spotify play -v " + name)
@@ -46,6 +45,7 @@ public class SpotifySong extends Song {
                     (60 * (long) Integer.parseInt(digits.substring(0, 2))
                             + Integer.parseInt(digits.substring(3, 5))) * 1000);
         }
+        super.start();
     }
 
     @Override
@@ -56,11 +56,6 @@ public class SpotifySong extends Song {
         if (volumeLevel != -1) {
             Runtime.getRuntime().exec("spotify volume to " + volumeLevel);
         }
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + duration + ") vol: " + volumeLevel;
     }
 
     public static SpotifySong fromKeywordAtRandom(String keyword, int volumeLevel, Timer t, int count)
@@ -112,4 +107,5 @@ public class SpotifySong extends Song {
         System.out.println(result);
         return result;
     }
+
 }

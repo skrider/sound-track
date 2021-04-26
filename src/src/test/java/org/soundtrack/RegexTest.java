@@ -6,19 +6,25 @@ import java.util.regex.Pattern;
 
 public class RegexTest {
     public static void main(String[] args) {
-        Pattern reader = Pattern.compile("(?<=\\d\\h\\h)(\\w\\h|\\h\\w|\\w\\w)*(?=\\h\\h[^\\n]*Lemaitre)");
+        Pattern reader = Pattern.compile("[dh]");
         Pattern regex = Pattern.compile("(?<=\\d\\h\\h).*(?=\\h\\h)");
-        String test = "  1  Closer                         Lemaitre, Jennie A.\n" +
-                "  2  Eyes Wide Open                 Lemaitre\n" +
-                "  3  Higher                         Lemaitre, Maty Noyes\n" +
-                "  4  Polygon Dust                   Porter Robinson, Lemaitre\n" +
-                "  5  Not Too Late                   Lematre\n" +
-                "  6  It's Not This                  Bearson, Lemitre, josh pan";
-
-//        Matcher m = reader.matcher(test);
-        List<String> s = Utils.allMatches(reader, test);
-        for (String t : s) {
-            System.out.println(t);
+        Pattern regex2 = Pattern.compile("(?<=\\h)\\d?\\d?:?\\d?\\d:\\d\\d");
+        Pattern wordDetector = Pattern.compile("(?<=[\\[,]\\s)(?:\\{.*})(?=\\s?[\\],])");
+        Pattern partial1 = Pattern.compile("(?<=\\[\\s)\\w");
+        Pattern partial = Pattern.compile("[\\[,]");
+        String test = "{\n" +
+                "    rep: 1\n" +
+                "    volume: 80\n" +
+                "    shuffle: true\n" +
+                "    tracks: [\n" +
+                "        space song 11:11:20,\n" +
+                "        { rep: 2 volume: 50 shuffle: false tracks: [ sunflower , take what you want ] },\n" +
+                "        rockstar\n" +
+                "    ]\n" +
+                "}";
+        Matcher m = wordDetector.matcher(Utils.clean(test));
+        while (m.find()) {
+            System.out.println(m.group());
         }
     }
 }

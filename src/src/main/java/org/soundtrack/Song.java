@@ -20,7 +20,6 @@ public abstract class Song {
     public Song(String name, int volumeLevel, Timer timer) {
         this(name, timer);
         this.volumeLevel = volumeLevel;
-        duration = 0;
     }
 
     public Song(String name, int volumeLevel, Timer timer, long duration) {
@@ -77,6 +76,37 @@ public abstract class Song {
     {
         this.volumeLevel = volumeLevel;
         this.setVolumeLevel();
+    }
+
+    public Song copyChain() {
+        Song s  = new SpotifySong(name, volumeLevel, timer, duration);
+        if (next != null) {
+            s.setNext(next.copyChain());
+        }
+        return s;
+    }
+
+    public Song endOfChain() {
+        if (next == null) {
+            return this;
+        }
+        return next.endOfChain();
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + duration + ") vol: " + volumeLevel;
+    }
+
+    public void print() {
+        System.out.println(this);
+        if (next != null) {
+            next.print();
+        }
+    }
+
+    public static SpotifySong sentinel() {
+        return new SpotifySong("SENTINEL", -1, new Timer());
     }
 
 }
